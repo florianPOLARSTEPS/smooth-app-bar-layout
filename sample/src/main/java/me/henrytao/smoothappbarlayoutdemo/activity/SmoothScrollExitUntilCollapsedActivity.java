@@ -17,6 +17,7 @@
 package me.henrytao.smoothappbarlayoutdemo.activity;
 
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -24,6 +25,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -34,6 +36,9 @@ import me.henrytao.smoothappbarlayoutdemo.apdater.DynamicAdapter;
 import me.henrytao.smoothappbarlayoutdemo.util.Utils;
 
 public class SmoothScrollExitUntilCollapsedActivity extends BaseActivity {
+
+  @Bind(R.id.collapsing_toolbar_layout)
+  CollapsingToolbarLayout vCollapsingToolbarLayout;
 
   @Bind(R.id.recycler_view_target)
   RecyclerView vRecyclerView;
@@ -54,6 +59,13 @@ public class SmoothScrollExitUntilCollapsedActivity extends BaseActivity {
       @Override
       public void onClick(View v) {
         onBackPressed();
+      }
+    });
+
+    vCollapsingToolbarLayout.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Toast.makeText(getApplicationContext(),"Click", Toast.LENGTH_LONG).show();
       }
     });
 
