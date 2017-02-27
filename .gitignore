@@ -42,3 +42,4 @@ proguard/
 
 # Log Files
 *.log
+profiles_settings.xml
