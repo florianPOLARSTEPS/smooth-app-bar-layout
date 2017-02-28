@@ -48,7 +48,9 @@ public class SmoothCoordinatorLayout extends CoordinatorLayout {
   public boolean dispatchTouchEvent(MotionEvent ev) {
     boolean handled = super.dispatchTouchEvent(ev);
     if (handled && mAppBarLayout != null) {
-      mAppBarLayout.dispatchTouchEvent(ev);
+      MotionEvent transformed = MotionEvent.obtain(ev);
+      transformed.offsetLocation(getScrollX() - mAppBarLayout.getLeft(), getScrollY() - mAppBarLayout.getTop());
+      mAppBarLayout.dispatchTouchEvent(transformed);
     }
     return handled;
   }

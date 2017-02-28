@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import me.henrytao.recyclerview.SimpleRecyclerViewAdapter;
 import me.henrytao.recyclerview.holder.HeaderHolder;
 import me.henrytao.smoothappbarlayoutdemo.R;
@@ -62,13 +63,6 @@ public class SmoothScrollExitUntilCollapsedActivity extends BaseActivity {
       }
     });
 
-    vCollapsingToolbarLayout.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        Toast.makeText(getApplicationContext(),"Click", Toast.LENGTH_LONG).show();
-      }
-    });
-
     mAdapter = new DynamicAdapter<>(Utils.getSampleData());
     RecyclerView.Adapter adapter = new SimpleRecyclerViewAdapter(mAdapter) {
       @Override
@@ -97,5 +91,10 @@ public class SmoothScrollExitUntilCollapsedActivity extends BaseActivity {
       }
     });
     itemTouchHelper.attachToRecyclerView(vRecyclerView);
+  }
+
+  @OnClick(R.id.button)
+  public void onButtonClicked() {
+    Toast.makeText(this, "Clicked", Toast.LENGTH_SHORT).show();
   }
 }
