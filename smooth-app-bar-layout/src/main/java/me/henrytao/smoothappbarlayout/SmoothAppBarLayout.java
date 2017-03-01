@@ -63,6 +63,8 @@ public class SmoothAppBarLayout extends AppBarLayout {
 
   protected boolean mHaveChildWithInterpolator;
 
+  private float mDownY;
+
   private int mRestoreCurrentOffset;
 
   private ScrollTargetCallback mScrollTargetCallback;
@@ -104,24 +106,39 @@ public class SmoothAppBarLayout extends AppBarLayout {
 
     // We need to check wether we have arrived from our own triggered motion dispatch,
     // There are no really appropriate fields on MotionEvents to store custom data, so we abuse edgeflags
+    boolean dispatched = super.dispatchTouchEvent(ev);
     if (ev.getEdgeFlags() == CUSTOM_EDGE_FLAG) {
       return false;
     }
 
-    boolean dispatched = super.dispatchTouchEvent(ev);
-    if (dispatched && ev.getAction() == MotionEvent.ACTION_MOVE) {
-      // After we know some view in our hierarchy would want to receive the move touch event, we don't want it to have though,
-      // we create a new motion event which will cancel our current motion event stream and will be disregarded by appbarlayout,
-      // so CoordinatorLayout.Behaviour can receive the new motion event stream
-      MotionEvent motionEvent = MotionEvent.obtain(ev);
-      motionEvent.offsetLocation(getLeft(), getTop());
-      motionEvent.setAction(MotionEvent.ACTION_DOWN);
-      motionEvent.setEdgeFlags(CUSTOM_EDGE_FLAG);
+    switch (ev.getAction()) {
+      case MotionEvent.ACTION_DOWN:
+        mDownY = ev.getY();
+        break;
 
-      // getParent() cannot return null, since well - who would have called this method
-      ((ViewGroup) getParent()).dispatchTouchEvent(motionEvent);
-      return false;
+      case MotionEvent.ACTION_MOVE:
+        if (dispatched && Math.abs(ev.getY() - mDownY) > 20) {
+          // After we know some view in our hierarchy would want to receive the move touch event, we don't want it to have though,
+          // we create a new motion event which will cancel our current motion event stream and will be disregarded by appbarlayout,
+          // so CoordinatorLayout.Behaviour can receive the new motion event stream
+          MotionEvent motionEvent = MotionEvent.obtain(ev);
+          motionEvent.offsetLocation(getLeft(), getTop());
+          motionEvent.setAction(MotionEvent.ACTION_DOWN);
+          motionEvent.setEdgeFlags(CUSTOM_EDGE_FLAG);
+
+          // getParent() cannot return null, since well - who would have called this method
+          ((ViewGroup) getParent()).dispatchTouchEvent(motionEvent);
+          return false;
+        }
+        break;
+
+      default:
+      case MotionEvent.ACTION_UP:
+      case MotionEvent.ACTION_CANCEL:
+        mDownY = 0;
+        break;
     }
+
     return dispatched;
   }
 
