@@ -19,7 +19,6 @@ package me.henrytao.smoothappbarlayout;
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 
 
@@ -42,17 +41,6 @@ public class SmoothCoordinatorLayout extends CoordinatorLayout {
 
   public SmoothCoordinatorLayout(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-  }
-
-  @Override
-  public boolean dispatchTouchEvent(MotionEvent ev) {
-    boolean handled = super.dispatchTouchEvent(ev);
-    if (handled && mAppBarLayout != null) {
-      MotionEvent transformed = MotionEvent.obtain(ev);
-      transformed.offsetLocation(getScrollX() - mAppBarLayout.getLeft(), getScrollY() - mAppBarLayout.getTop());
-      mAppBarLayout.dispatchTouchEvent(transformed);
-    }
-    return handled;
   }
 
   @Override
